@@ -1,0 +1,9 @@
+#!/bin/bash
+
+prometheus/deploy.sh
+
+kubectl apply -f node-exporter/node-exporter-deploy.yaml
+
+kube-state-metrics/deploy.sh
+
+grafana/deploy.sh

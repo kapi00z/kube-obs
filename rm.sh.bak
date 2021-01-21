@@ -1,0 +1,9 @@
+#!/bin/bash
+
+prometheus/rm.sh
+
+kubectl delete -f node-exporter/node-exporter-deploy.yaml
+
+kube-state-metrics/rm.sh
+
+grafana/rm.sh

@@ -1,0 +1,61 @@
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  name: grafana-kubegraf
+rules:
+  - apiGroups: [""]
+    resources:
+      - namespaces
+      - pods
+      - services
+      - componentstatuses
+      - nodes
+      - events
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["batch"]
+    resources:
+      - jobs
+      - cronjobs
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["extensions"]
+    resources:
+      - deployments
+      - daemonsets
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["apps"]
+    resources:
+      - statefulsets
+      - deployments
+      - daemonsets
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: grafana-kubegraf-secret
+  annotations:
+    kubernetes.io/service-account.name: grafana-kubegraf
+type: kubernetes.io/service-account-token
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: grafana-kubegraf
+secrets:
+  - name: grafana-kubegraf-secret
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: grafana-kubegraf
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: grafana-kubegraf
+subjects:
+  - apiGroup: rbac.authorization.k8s.io
+    kind: User
+    name: grafana-kubegraf
+  - kind: ServiceAccount
+    name: grafana-kubegraf
+    namespace: default
