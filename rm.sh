@@ -1,6 +1,8 @@
 #!/bin/bash
 
-types=( "*cluster-role.yaml" "*config.yaml" "*deploy.yaml" "*ingress.yaml")
+kubectl patch pvc prometheus-logs -p '{"metadata":{"finalizers": []}}' --type=merge
+
+types=( "*cluster-role.yaml" "*pvc.yaml" "*pv.yaml" "*config.yaml" "*deploy.yaml" "*ingress.yaml")
 echo ${types[@]}
 for type in ${types[@]}
 do

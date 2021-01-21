@@ -1,6 +1,6 @@
 #!/bin/bash
 
-types=( "*cluster-role.yaml" "*config.yaml" "*deploy.yaml" "*ingress.yaml")
+types=( "*cluster-role.yaml" "*pv.yaml" "*pvc.yaml" "*config.yaml" "*deploy.yaml" "*ingress.yaml")
 echo ${types[@]}
 for type in ${types[@]}
 do

@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: promtail
+spec:
+  selector:
+    matchLabels:
+      app: promtail
+  template:
+    metadata:
+      labels:
+        app: promtail
+    spec:
+      containers:
+      - name: promtail
+        image: grafana/promtail
+        command: ["promtail"]
+        args: ["--config.file=/etc/promtail/promtail.yaml"]
+        ports:
+        - name: http
+          containerPort: 9080
+        volumeMounts:
+          - name: promtail
+            mountPath: /etc/promtail/promtail.yaml
+            subPath: promtail.yaml
+          - name: prometheus-logs
+            mountPath: /var/log/prometheus
+      volumes:
+        - name: promtail
+          configMap:
+            name: promtail-config
+        - name: prometheus-logs
+          persistentVolumeClaim:
+            claimName: prometheus-logs

@@ -18,16 +18,21 @@ spec:
       - name: prometheus
         image: prom/prometheus
         ports:
-        - name: metrics
+        - name: http
           containerPort: 9090
         volumeMounts:
           - name: prometheus
             mountPath: /etc/prometheus/prometheus.yml
             subPath: prometheus.yml
+          - name: prometheus-logs
+            mountPath: /prometheus
       volumes:
         - name: prometheus
           configMap:
             name: prometheus-config
+        - name: prometheus-logs
+          persistentVolumeClaim:
+            claimName: prometheus-logs
       serviceAccountName: prometheus
 ---
 apiVersion: v1
@@ -40,4 +45,3 @@ spec:
   ports:
   - port: 9090
     targetPort: 9090
-    name: http-metrics
